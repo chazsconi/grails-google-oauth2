@@ -5,6 +5,7 @@
 .classpath
 stacktrace.log
 /*.zip
+/*.sha1
 /plugin.xml
 /*.log
 /*DB.*
