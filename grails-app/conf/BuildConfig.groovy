@@ -20,18 +20,25 @@ grails.project.dependency.resolution = {
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
         //mavenRepo "http://repository.jboss.com/maven2/"
+		mavenRepo "http://google-api-client-libraries.appspot.com/mavenrepo"
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
         // runtime 'mysql:mysql-connector-java:5.1.21'
+        compile 'com.google.http-client:google-http-client-jackson:1.13.1-beta'
+        compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.6'
+        // TODO: Put some non-calendar stuff here
+		compile 'com.google.apis:google-api-services-calendar:v3-rev30-1.13.2-beta'
     }
 
     plugins {
+        runtime(":hibernate:$grailsVersion")
         build(":tomcat:$grailsVersion",
               ":release:2.2.1",
               ":rest-client-builder:1.0.3") {
-            export = false
-        }
+            	export = false
+		    	}
+		compile(":jasypt-encryption:1.1.0")
     }
 }
