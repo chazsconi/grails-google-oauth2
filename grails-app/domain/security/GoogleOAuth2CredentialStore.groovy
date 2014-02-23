@@ -1,6 +1,5 @@
 package security
 import java.util.Date;
-import java.util.logging.Logger;
 
 import com.google.api.client.auth.oauth2.TokenResponse
 import com.google.api.client.auth.oauth2.TokenErrorResponse
