@@ -1,4 +1,4 @@
-package security
+package grails.plugin.googleOAuth2
 import java.util.Date;
 
 import com.google.api.client.auth.oauth2.TokenResponse

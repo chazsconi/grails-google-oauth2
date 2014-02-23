@@ -1,4 +1,4 @@
-package security
+package grails.plugin.googleOAuth2
 
 import grails.test.mixin.*
 import grails.test.GrailsMock

@@ -1,4 +1,4 @@
-package security
+package grails.plugin.googleOAuth2
 import org.codehaus.groovy.grails.io.support.AntPathMatcher
 import grails.util.Holders
 import javax.servlet.http.HttpServletRequest

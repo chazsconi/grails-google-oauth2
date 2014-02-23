@@ -1,4 +1,4 @@
-package security
+package grails.plugin.googleOAuth2
 
 import com.google.api.client.auth.oauth2.TokenResponse
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
