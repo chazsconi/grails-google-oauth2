@@ -6,11 +6,11 @@ The Grails Google OAuth2 plugin provides integration with Google Accounts to use
 
 It handles the OAuth2 control flow including redirecting the user to Google to request authorisation,  storing the credential in the session and DB (encrypted) and obtaining refresh tokens when necessary.
 
-## Use
+## How it works
 A list of URLs in your application which require access to the Google Account can be protected by a URL list.  When the user navigates to one of these URLs, the plugin looks for a credential:
 
  - First in the session as *session.googleCredential*
- - If none is found then it checks in the DB for a credential for the current user
+ - If none is found then it checks in the DB table *credential_store* for a credential for the current user
  - If this is not found then it redirects the user to Google to request access.
 
 After granting access the user is redirected back to the your application where the credential is stored in the DB.  Subsequent access should not require further authorisation unless the user explicity revokes your application access to their Google account.
@@ -22,11 +22,11 @@ You need to tell the plugin how to find the email address of the current user.  
 
 If you are storing the user in the session something like this is probably required:
 
-	googleOAuth2.currentUserRef = {->session.user.email}
+	googleOAuth2.currentUserRef = {-> session.user.email}
 
 If you are using Spring Security Service, use this
 
-	googleOAuth2.currentUserRef = {->grails.util.Holders.applicationContext.getBean("springSecurityService").currentUser.email}
+	googleOAuth2.currentUserRef = {-> grails.util.Holders.applicationContext.getBean("springSecurityService").currentUser.email}
 
 
 You need to obtain a client id from Google before you can grant access.  Once you do this put the details here:
@@ -39,11 +39,11 @@ Also, specify which permissions you require the user to authorise, e.g. calendar
 
 	googleOAuth2.scope = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email'
 
-Provide the list of URLs that require access to the Google resources
+Provide the list of URLs that require access to the Google resources, i.e. those where you require the googleCredential to be already in the session.
 
 	googleOAuth2.interceptUrlList = ['/calendar/view', '/calendar/save']
 
-The credential (current access token and refresh token) are encrypted using the [jasypt plugin](http://grails.org/plugin/jasypt-encryption) on the DB.
+The credentials (current access token and refresh token) are encrypted using the [jasypt plugin](http://grails.org/plugin/jasypt-encryption) on the DB.
 
 You therefore need to add the following encryption settings.  Change the password to something strong.  You can also change the other settings if required.
 
@@ -74,16 +74,26 @@ class ExampleController {
 }
 ```
 
+## Contributing
+
+Pull requests are the preferred method for submitting contributions.
+
 ## Licence
 
 Copyright 2014 Charles Bernasconi
 
-The plugin is released under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html "Apache License, Version 2.0 - The Apache Software Foundation") b
+This file is part of the Grails Google OAuth2 Plugin.
 
-## Issues
+The Grails Google OAuth2 Plugin is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-Issues can be raised via the
+The Grails Google OAuth2 Plugin is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-## Contributing
+You should have received a copy of the GNU General Public License
+along with the Grails Google OAuth2 Plugin.  If not, see <http://www.gnu.org/licenses/>.
 
-Pull requests are the preferred method for submitting contributions. Please open an issue via that issue tracker link above and create an issue describing what your contribution addresses.

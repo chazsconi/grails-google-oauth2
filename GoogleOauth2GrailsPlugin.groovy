@@ -1,4 +1,4 @@
-class GoogleOauth2GrailsPlugin {
+class GoogleOAuth2GrailsPlugin {
     // the plugin version
     def version = "0.1"
     // the version or versions of Grails the plugin is designed for
@@ -10,19 +10,21 @@ class GoogleOauth2GrailsPlugin {
 
     // TODO Fill in these fields
     def title = "Google Oauth2 Plugin" // Headline display name of the plugin
-    def author = "Your name"
-    def authorEmail = ""
+    def author = "Charles Bernasconi"
+    def authorEmail = "grails-google-oauth2@sconi.net"
     def description = '''\
-Brief summary/description of the plugin.
+The plugin provides integration with Google Accounts to use with services such as Google Calendar.
+It handles the OAuth2 control flow including redirecting the user to Google to request authorisation,
+storing the credential in the session and DB (encrypted) and obtaining refresh tokens when necessary.
 '''
 
     // URL to the plugin's documentation
-    def documentation = "http://grails.org/plugin/google-oauth2"
+//    def documentation = "http://grails.org/plugin/google-oauth2"
 
     // Extra (optional) plugin metadata
 
     // License: one of 'APACHE', 'GPL2', 'GPL3'
-//    def license = "APACHE"
+    def license = "GPL3"
 
     // Details of company behind the plugin (if there is one)
 //    def organization = [ name: "My Company", url: "http://www.my-company.com/" ]
