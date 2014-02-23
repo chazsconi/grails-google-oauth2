@@ -7,7 +7,6 @@ import grails.test.GrailsMock
 @Mock(GoogleOAuth2Filters)
 class GoogleOAuth2FiltersTests {
 
-	def springSecurityServiceControl
 	def googleOAuth2ServiceControl
 
 	void mockConfig() {
