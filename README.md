@@ -18,6 +18,17 @@ After granting access the user is redirected back to the your application where 
 However, you should assume that the protected URLs will have a valid *session.googleCredential* object which can be used by other Google services.
 
 ## Configuration
+### Set up account on Google
+
+You need to obtain a Client ID from google.
+
+ 1. Go to <https://console.developers.google.com>
+ 1. In Credentials, create a new Client ID. Specify the callback as http://<yourapp>/googleOAuth2/callback (this can be your localhost for development)
+ 1. In Consent Screen provide a product name
+ 1. In APIs select the APIs you want to use.  e.g. Calendar API
+
+### Config.groovy
+
 You need to tell the plugin how to find the email address of the current user.  This is used as a key in the DB to store the credential against and also to verify that the user has authorised the matching Google account.  To do this provide a closure in Config.groovy.
 
 If you are storing the user in the session something like this is probably required:
@@ -29,7 +40,7 @@ If you are using Spring Security Service, use this
 	googleOAuth2.currentUserRef = {-> grails.util.Holders.applicationContext.getBean("springSecurityService").currentUser.email}
 
 
-You need to obtain a client id from Google before you can grant access.  Once you do this put the details here:
+Enter the Client ID and Secret from Google
 
 	googleOAuth2.clientId = "<YOUR GOOGLE CLIENT ID>"
 	googleOAuth2.clientSecret = "<YOUR SECRET>"
@@ -56,21 +67,47 @@ You therefore need to add the following encryption settings.  Change the passwor
 
 IMPORTANT! The jasypt plugin requires no unlimited Java encryption to be enabled.  For how to check and enable this please see the jasypt plugin documentation.
 
+## Example Controller
 
-## Example
-
-An example controller to get user information.  This assumes the path to the method is protected by the URL map.
+These two example actions assumes the paths are protected by the URL map so that authorisation is first checked.
 
 ```
-import groovyx.net.http.RESTClient
+package calendar.example223
 
-class ExampleController {
-	def loadUserInfo() {
-		def credential = session.googleCredential
+import groovyx.net.http.RESTClient
+import grails.converters.JSON
+import com.google.api.client.http.HttpTransport
+import com.google.api.client.json.JsonFactory
+import com.google.api.client.json.jackson.JacksonFactory
+import com.google.api.client.http.javanet.NetHttpTransport
+import com.google.api.services.calendar.Calendar
+
+class CalendarController {
+
+	static HttpTransport HTTP_TRANSPORT = new NetHttpTransport()
+	static JsonFactory JSON_FACTORY = new JacksonFactory()
+
+    /** Get user details using the Google REST API.
+     * N.B. This won't automatically refresh the access token if necessary
+     */
+    def userDetails() {
 		def userInfo = new RESTClient("https://www.googleapis.com/oauth2/v1/")
-				.get( path:'userinfo', query: [access_token: credential.accessToken]).data
-		render "userInfo = ${userInfo}"
-	}
+				.get( path:'userinfo', query: [access_token: session.googleCredential.accessToken])
+				.data
+		render userInfo
+    }
+
+    /** Get the calendar details fo the user using the Google Java API.
+     * This will refresh the access token automatically if necessary
+     */
+    def calendarEvents() {
+		Calendar calendarService =
+			new Calendar(HTTP_TRANSPORT, JSON_FACTORY, session.googleCredential)
+		def events = calendarService.events()
+			.list(grailsApplication.config.googleOAuth2.currentUserRef())
+			.execute()
+		render events
+    }
 }
 ```
 
