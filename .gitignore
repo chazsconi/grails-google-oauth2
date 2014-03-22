@@ -3,6 +3,7 @@
 *Db.script
 .settings
 .classpath
+.project
 stacktrace.log
 /*.zip
 /*.sha1
