@@ -2,6 +2,9 @@
 
 grails.serverURL = "http://localhost:8080"
 
+googleOAuth2.clientId = "<YOUR GOOGLE CLIENT ID>"
+googleOAuth2.clientSecret = "<YOUR SECRET>"
+
 log4j = {
     // Example of changing the log pattern for the default console
     // appender:
