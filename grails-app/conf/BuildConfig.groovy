@@ -26,7 +26,7 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
         // runtime 'mysql:mysql-connector-java:5.1.21'
-        compile 'com.google.http-client:google-http-client-jackson:1.13.1-beta'
+        compile 'com.google.http-client:google-http-client-jackson:1.17.0-rc'
         compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.6'
 		compile 'com.google.apis:google-api-services-oauth2:v2-rev64-1.17.0-rc'
     }
