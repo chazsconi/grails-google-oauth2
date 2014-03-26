@@ -1,18 +1,17 @@
 package grails.plugin.googleOAuth2
 
+import static groovyx.net.http.ContentType.URLENC
+import groovyx.net.http.HttpResponseException
+import groovyx.net.http.RESTClient
+
+import org.springframework.transaction.annotation.Transactional
+
 import com.google.api.client.auth.oauth2.TokenResponse
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
-import groovyx.net.http.RESTClient
-import groovyx.net.http.HttpResponseException
-import static groovyx.net.http.ContentType.URLENC
-
-import grails.converters.JSON
 
 // The service is difficult to test as it would involve mocking a lot of REST APIs
 // also there is currently no logic in the service.
 class GoogleOAuth2Service {
-
-	static transactional = true
 
 	def grailsApplication
 
@@ -63,6 +62,7 @@ class GoogleOAuth2Service {
 	 * @param storeEmail email address to store the credential against in the DB
 	 * @return
 	 */
+	@Transactional
 	GoogleCredential buildCredentialFromTokenResponse(TokenResponse tokenResponse, String userRef) {
 
 		log.info "Building credential for $userRef"
@@ -87,6 +87,7 @@ class GoogleOAuth2Service {
 	/** Deletes the credential in the database
 	 * @param userRef
 	 */
+	@Transactional
 	void deleteCredential(String userRef) {
 		log.info "Deleting credential for $userRef"
 		GoogleOAuth2CredentialStore store = GoogleOAuth2CredentialStore.findByUserRef(userRef)

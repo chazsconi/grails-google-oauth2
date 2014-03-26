@@ -1,16 +1,18 @@
 package grails.plugin.googleOAuth2
-import org.codehaus.groovy.grails.io.support.AntPathMatcher
-import grails.util.Holders
+
 import javax.servlet.http.HttpServletRequest
+
+import org.springframework.util.AntPathMatcher
+
 class GoogleOAuth2Filters {
 
 	def googleOAuth2Service
+	AntPathMatcher matcher = new AntPathMatcher()
 
 	def filters = {
-		all(uri:"/**") {
+		googleOAuth2(uri:"/**") {
 			before = {
-				log.debug "Filter URL="+requestUrl(request)
-				AntPathMatcher matcher = new AntPathMatcher()
+				log.debug "Filter URL=${requestUrl(request)}"
 				def interceptUrlList = grailsApplication.config.googleOAuth2.interceptUrlList
 				if(interceptUrlList.any { url -> matcher.match(url, request.forwardURI)})
 				{
@@ -34,17 +36,15 @@ class GoogleOAuth2Filters {
 						}
 					}
 				}
-            }
-        }
-    }
+			}
+		}
+	}
 
 	String requestUrl(HttpServletRequest request)
 	{
-		StringBuilder sb = new StringBuilder()
-		sb << request.forwardURI
+		StringBuilder sb = new StringBuilder(request.forwardURI)
 		if(request.queryString) {
-			sb << "?"
-			sb << request.queryString
+			sb << "?" << request.queryString
 		}
 		sb.toString()
 	}

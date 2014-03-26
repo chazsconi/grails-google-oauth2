@@ -1,14 +1,13 @@
 package grails.plugin.googleOAuth2
-import java.util.Date;
 
-import com.google.api.client.auth.oauth2.TokenResponse
-import com.google.api.client.auth.oauth2.TokenErrorResponse
 import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.auth.oauth2.CredentialRefreshListener
+import com.google.api.client.auth.oauth2.TokenErrorResponse
+import com.google.api.client.auth.oauth2.TokenResponse
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
-import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.HttpTransport
 import com.google.api.client.http.javanet.NetHttpTransport
-import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonFactory
 import com.google.api.client.json.jackson.JacksonFactory
 import com.bloomhealthco.jasypt.GormEncryptedStringType
 import grails.util.Holders
@@ -28,7 +27,7 @@ class GoogleOAuth2CredentialStore implements CredentialRefreshListener {
 		.setTransport(HTTP_TRANSPORT)
 		.setJsonFactory(JSON_FACTORY)
 		.setClientSecrets(Holders.config.googleOAuth2.clientId,
-							Holders.config.googleOAuth2.clientSecret)
+		                  Holders.config.googleOAuth2.clientSecret)
 		.addRefreshListener(this)
 		.build()
 
@@ -62,7 +61,7 @@ class GoogleOAuth2CredentialStore implements CredentialRefreshListener {
 		credential.setExpirationTimeMilliseconds(expirationTimeMilliseconds)
 	}
 
-	public void onTokenResponse(Credential credential, TokenResponse tokenResponse) {
+	void onTokenResponse(Credential credential, TokenResponse tokenResponse) {
 
 		log.info "onTokenResponse() for $userRef"
 		//Have to reload as object is problably not in Hibernate session
@@ -75,17 +74,16 @@ class GoogleOAuth2CredentialStore implements CredentialRefreshListener {
 		store.save(failOnError:true)
 	}
 
-	public void onTokenErrorResponse(Credential credential, TokenErrorResponse tokenErrorResponse) {
-
+	void onTokenErrorResponse(Credential credential, TokenErrorResponse tokenErrorResponse) {
 		log.error "On token error response credential=${credential} tokenErrorResponse=${tokenErrorResponse}"
 	}
 
 	/* Outputs the credential in a human friendly format
 	 * @return a map of the credential components
 	 */
-	public static def credentialToMap(Credential c) {
+	static credentialToMap(Credential c) {
 		if(c==null) return null
-		// Obfiscate the tokens
+		// Obfuscate the tokens
 		[credential: 					c,
 			accessToken: 					c.getAccessToken() ? "****" + c.getAccessToken()[-6..-1] : null,
 			refreshToken: 					c.getRefreshToken() ? "****" + c.getRefreshToken()[-6..-1] : null,
