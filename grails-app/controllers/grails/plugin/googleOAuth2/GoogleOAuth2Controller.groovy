@@ -63,8 +63,8 @@ class GoogleOAuth2Controller {
 			}
 
 		}
-		catch (Exception e) {
-			log.error e.printStackTrace()
+		catch (e) {
+			log.error e.message, e
 			render e
 		}
 	}
@@ -79,7 +79,7 @@ class GoogleOAuth2Controller {
 	 * @return
 	 */
 	def resetCredentials() {
-		session.googleCredential= null
+		session.removeAttribute('googleCredential')
 		String msg = "googleCredential reset in session"
 		log.info msg
 		render msg
@@ -89,7 +89,7 @@ class GoogleOAuth2Controller {
 	 * @return
 	 */
 	def resetCredentialsDB() {
-		session.googleCredential= null
+		session.removeAttribute('googleCredential')
 		googleOAuth2Service.deleteCredential(getCurrentUserRef())
 		String msg = "googleCredential reset in session and DB"
 		log.info msg

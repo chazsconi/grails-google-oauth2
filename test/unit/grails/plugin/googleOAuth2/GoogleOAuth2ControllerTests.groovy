@@ -1,35 +1,19 @@
 package grails.plugin.googleOAuth2
 
+import grails.test.mixin.TestMixin
+import grails.test.mixin.domain.DomainClassUnitTestMixin
+
 import com.google.api.client.auth.oauth2.TokenResponse
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
-import grails.test.mixin.domain.DomainClassUnitTestMixin
-import com.google.api.client.json.jackson.JacksonFactory
-import com.google.api.client.http.javanet.NetHttpTransport
 
-/**
- * See the API for {@link grails.test.mixin.support.GrailsUnitTestMixin} for usage instructions
- */
 @TestMixin(DomainClassUnitTestMixin)
 class GoogleOAuth2ControllerTests {
 
+	private TokenResponse mockTokenResponse = new TokenResponse()
+	private GoogleCredential mockCredential = new GoogleCredential()
+
 	void setUp() {
-		setUpData()
-		stubCurrentUser("angelica@test.com")
-	}
-
-	void tearDown() {
-	}
-
-	TokenResponse mockTokenResponse
-	GoogleCredential mockCredential
-
-	void setUpData() {
-		mockTokenResponse = new TokenResponse()
-		mockCredential = new GoogleCredential()
-	}
-
-	void stubCurrentUser(String ref) {
-		controller.grailsApplication.config.googleOAuth2.currentUserRef = {->ref}
+		controller.grailsApplication.config.googleOAuth2.currentUserRef = { -> "angelica@test.com" }
 	}
 
 	void testAuthorize() {
@@ -47,7 +31,7 @@ class GoogleOAuth2ControllerTests {
 
 		control.demand.exchangeCodeForToken {code, callbackURL ->
 			assert "MYCODE" == code
-			mockTokenResponse }
+			mockTokenResponse}
 
 		control.demand.buildCredentialFromTokenResponse {tokenResponse, email ->
 			assert mockTokenResponse == tokenResponse

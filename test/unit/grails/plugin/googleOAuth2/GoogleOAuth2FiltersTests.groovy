@@ -1,7 +1,8 @@
 package grails.plugin.googleOAuth2
 
-import grails.test.mixin.*
 import grails.test.GrailsMock
+import grails.test.mixin.Mock
+import grails.test.mixin.TestFor
 
 @TestFor(GoogleOAuth2Controller)
 @Mock(GoogleOAuth2Filters)
@@ -12,7 +13,7 @@ class GoogleOAuth2FiltersTests {
 	void mockConfig() {
 		controller.grailsApplication.config.googleOAuth2.currentUserRef = {->"test@test.com"}
 		controller.grailsApplication.config.googleOAuth2.interceptUrlList = ['/admin/action1',
-								 									  		 '/admin/action2']
+		                                                                     '/admin/action2']
 	}
 
 	void mockServices() {

@@ -37,7 +37,7 @@ If you are storing the user in the session something like this is probably requi
 
 If you are using Spring Security Service, use this
 
-	googleOAuth2.currentUserRef = {-> grails.util.Holders.applicationContext.getBean("springSecurityService").currentUser.email}
+	googleOAuth2.currentUserRef = {-> grails.util.Holders.applicationContext.springSecurityService.currentUser.email}
 
 
 Enter the Client ID and Secret from Google
