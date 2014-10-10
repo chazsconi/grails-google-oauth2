@@ -19,6 +19,7 @@ class GoogleOAuth2FiltersTests {
 	void mockServices() {
 		// Due to the strange way in testing filters, this convoluted
 		// method of mocking is required for services used in the filter
+		// See simpler example here: http://www.intelligrape.com/blog/2014/08/04/grails-unit-test-filters-with-the-injected-service/
 		defineBeans {
 			googleOAuth2ServiceControl(GrailsMock, GoogleOAuth2Service)
 			googleOAuth2Service(googleOAuth2ServiceControl:"createMock")
