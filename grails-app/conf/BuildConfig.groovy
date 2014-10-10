@@ -1,5 +1,8 @@
 grails.project.work.dir = 'target'
 
+// Needed to override ivy as get a missing dependency
+// on org/hamcrest/SelfDescribing
+grails.project.dependency.resolver = "maven"
 grails.project.dependency.resolution = {
 
 	inherits 'global'
@@ -16,6 +19,10 @@ grails.project.dependency.resolution = {
 		compile 'com.google.http-client:google-http-client-jackson:1.17.0-rc'
 		compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.6'
 		compile 'com.google.apis:google-api-services-oauth2:v2-rev64-1.17.0-rc'
+
+        runtime 'org.jasypt:jasypt:1.9.0'
+        runtime 'org.jasypt:jasypt-hibernate3:1.9.0'
+        runtime 'org.bouncycastle:bcprov-jdk16:1.46'
 
 		compile 'org.hibernate:hibernate-core:3.6.10.Final', {
 			excludes 'ant', 'antlr', 'cglib', 'commons-collections', 'commons-logging', 'commons-logging-api',
@@ -39,6 +46,8 @@ grails.project.dependency.resolution = {
 			export = false
 		}
 
-		compile(":jasypt-encryption:1.1.0")
+		// This plugin code has been copied into this project as the current version doesn't support Grail 2.4
+		// See src directory
+		//compile(":jasypt-encryption:1.1.0")
 	}
 }

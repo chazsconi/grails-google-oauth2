@@ -6,6 +6,7 @@ import grails.test.mixin.domain.DomainClassUnitTestMixin
 import com.google.api.client.auth.oauth2.TokenResponse
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 
+@TestFor(GoogleOAuth2Controller)
 @TestMixin(DomainClassUnitTestMixin)
 class GoogleOAuth2ControllerTests {
 

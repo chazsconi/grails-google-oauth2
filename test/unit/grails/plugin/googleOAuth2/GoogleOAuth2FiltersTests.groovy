@@ -5,7 +5,7 @@ import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 
 @TestFor(GoogleOAuth2Controller)
-@Mock(GoogleOAuth2Filters)
+@Mock([GoogleOAuth2Filters,GoogleOAuth2Service])
 class GoogleOAuth2FiltersTests {
 
 	def googleOAuth2ServiceControl
