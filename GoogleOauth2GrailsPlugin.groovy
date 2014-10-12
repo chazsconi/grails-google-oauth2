@@ -1,6 +1,6 @@
 // The name of the plugin is converted from this class name, hence this will be google-oauth2.  Thus we cannot have GoogleOAuth2
 class GoogleOauth2GrailsPlugin {
-	def version = "0.14"
+	def version = "0.15"
 	def grailsVersion = "2.0 > *"
 	def title = "Google Oauth2 Plugin"
 	def description = '''\
