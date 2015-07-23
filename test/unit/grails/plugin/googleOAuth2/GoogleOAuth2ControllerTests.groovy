@@ -27,7 +27,8 @@ class GoogleOAuth2ControllerTests {
 		assert "callback=http://localhost:8080/googleOAuth2/callback?email=angelica@test.com" == response.redirectedUrl
 	}
 
-	void testCallback() {
+	void doTestValidCallback(storeCredentialInSession) {
+		controller.grailsApplication.config.googleOAuth2.storeCredentialInSession = storeCredentialInSession
 		def control = mockFor(GoogleOAuth2Service)
 
 		control.demand.exchangeCodeForToken {code, callbackURL ->
@@ -50,7 +51,16 @@ class GoogleOAuth2ControllerTests {
 		controller.callback("MYCODE")
 
 		assert "SuccessURL" == response.redirectedUrl
+	}
+
+	void testCallbackStoresCredential() {
+		doTestValidCallback(true)
 		assert mockCredential == session.googleCredential
+	}
+
+	void testCallbackDoesNotStoreCredential() {
+		doTestValidCallback(false)
+		assert null == session.googleCredential
 	}
 
 	void testCallbackWrongUser() {

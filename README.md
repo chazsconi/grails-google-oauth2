@@ -67,6 +67,22 @@ You therefore need to add the following encryption settings.  Change the passwor
 
 IMPORTANT! The jasypt plugin requires no unlimited Java encryption to be enabled.  For how to check and enable this please see the jasypt plugin documentation.
 
+### Serialization problems
+
+If your session needs to be serializable (e.g. you are storing it in a DB, or replicating it) the credential cannot be stored in the session as the class *com.google.api.client.googleapis.auth.oauth2.GoogleCredential* does not implement *java.io.Serializable*.  This will be obvious as you will see *java.io.NotSerializableException* occurring.  It is not easy to override the *GoogleCredential* class and provide a serializable child class as it also has a inner *Builder* class.
+
+To solve this, set the following:
+
+	googleOAuth2.storeCredentialInSession = false
+
+The filter will then not place the credential in the session, however it will ensure it is available in the DB and can be obtained by:
+
+	googleOAuth2Service.loadCredential(session.user.email)
+
+Replace *session.user.email* with the same as you have in *googleOAuth2.currentUserRef*.
+
+This will be less efficient because everytime a protected URL is accessed a DB lookup will occur to verify the credential is in the DB.  An enhancement could be to store a flag in the session to indicate the credential is valid, but this will not deal with the expiry of the session and requesting a refresh token.
+
 ## Example Controller
 
 These two example actions assumes the paths are protected by the URL map so that authorisation is first checked.
@@ -117,7 +133,7 @@ Pull requests are the preferred method for submitting contributions.
 
 ## Licence
 
-Copyright 2014 Charles Bernasconi
+Copyright 2015 Charles Bernasconi
 
 This file is part of the Grails Google OAuth2 Plugin.
 

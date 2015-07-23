@@ -58,7 +58,9 @@ class GoogleOAuth2Controller {
 			else
 			{
 				// Store in session
-				session.googleCredential = credential
+				if(grailsApplication.config.googleOAuth2.storeCredentialInSession)
+					session.googleCredential = credential
+
 				redirect url: session.googleAuthSuccess
 			}
 

@@ -9,3 +9,4 @@ grails.serverURL = "http://localhost:8080"
 
 googleOAuth2.clientId = "<YOUR GOOGLE CLIENT ID>"
 googleOAuth2.clientSecret = "<YOUR SECRET>"
+googleOAuth2.storeCredentialInSession = true

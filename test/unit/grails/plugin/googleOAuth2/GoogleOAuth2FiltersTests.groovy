@@ -10,10 +10,11 @@ class GoogleOAuth2FiltersTests {
 
 	def googleOAuth2ServiceControl
 
-	void mockConfig() {
+	void mockConfig(Boolean storeCredentialInSession) {
 		controller.grailsApplication.config.googleOAuth2.currentUserRef = {->"test@test.com"}
 		controller.grailsApplication.config.googleOAuth2.interceptUrlList = ['/admin/action1',
 		                                                                     '/admin/action2']
+		controller.grailsApplication.config.googleOAuth2.storeCredentialInSession = storeCredentialInSession
 	}
 
 	void mockServices() {
@@ -28,7 +29,7 @@ class GoogleOAuth2FiltersTests {
 	}
 
 	void testUnfilteredAction() {
-		mockConfig()
+		mockConfig(true)
 		request.forwardURI = '/admin/unfiltered'
 
 		controller.metaClass.unfiltered {-> render "OK"}
@@ -41,7 +42,8 @@ class GoogleOAuth2FiltersTests {
 	}
 
 	void testCredentialInSession() {
-		mockConfig()
+		mockConfig(true)
+
 		request.forwardURI = '/admin/action1'
 		session.googleCredential = new Object()
 
@@ -54,8 +56,8 @@ class GoogleOAuth2FiltersTests {
 		assert 200 == response.status
 	}
 
-	void doTestActionFiltered(String action) {
-		mockConfig()
+	void doTestActionFilteredWhenCredentialNotInDB(String action) {
+		mockConfig(true)
 		mockServices()
 
 		request.addHeader('referer','/refering/page')
@@ -73,15 +75,36 @@ class GoogleOAuth2FiltersTests {
 	}
 
 	void testActionFilteredAction1() {
-		doTestActionFiltered("action1")
+		doTestActionFilteredWhenCredentialNotInDB("action1")
 	}
 
 	void testActionFilteredAction2() {
-		doTestActionFiltered("action2")
+		doTestActionFilteredWhenCredentialNotInDB("action2")
 	}
 
-	void testCredentialInDB() {
-		mockConfig()
+	void testCredentialNotPlacedInSessionWhenInDB() {
+		mockConfig(false)
+		mockServices()
+
+		request.forwardURI = '/admin/action1'
+		def dummyCredential = new Object()
+
+		googleOAuth2ServiceControl.demand.loadCredential { String ref ->
+			assert "test@test.com" == ref
+			dummyCredential }
+
+		controller.metaClass.edit {-> render "OK"}
+
+		withFilters(action:'action1') {
+			controller.edit()
+		}
+		assert null == response.redirectedUrl
+		assert 200 == response.status
+		assert null == session.googleCredential
+	}
+
+	void testCredentialPlacedInSessionWhenInDB() {
+		mockConfig(true)
 		mockServices()
 
 		request.forwardURI = '/admin/action1'

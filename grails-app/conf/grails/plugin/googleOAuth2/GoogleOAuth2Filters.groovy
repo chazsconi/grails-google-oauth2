@@ -12,17 +12,19 @@ class GoogleOAuth2Filters {
 	def filters = {
 		googleOAuth2(uri:"/**") {
 			before = {
+				Boolean storeCredentialInSession = grailsApplication.config.googleOAuth2.storeCredentialInSession
 				log.debug "Filter URL=${requestUrl(request)}"
 				def interceptUrlList = grailsApplication.config.googleOAuth2.interceptUrlList
 				if(interceptUrlList.any { url -> matcher.match(url, request.forwardURI)})
 				{
 					log.info "In action requiring googleCredential session"
-					if(!session.googleCredential)
+					if(!storeCredentialInSession || !session.googleCredential)
 					{
-						log.info "No googleCredential in session.  Try to find credential in DB..."
+						log.info "No googleCredential in session (or not storing in session).  Try to find credential in DB..."
 						Closure getCurrentUserRef = grailsApplication.config.googleOAuth2.currentUserRef
-						session.googleCredential = googleOAuth2Service.loadCredential(getCurrentUserRef())
-						if(!session.googleCredential) {
+
+						def googleCredential = googleOAuth2Service.loadCredential(getCurrentUserRef())
+						if(!googleCredential) {
 							log.info "No googleCredential found in DB.  Redirecting to authenticate on Google"
 
 							// Remember the current URL so we can redirect back to it
@@ -34,6 +36,8 @@ class GoogleOAuth2Filters {
 							redirect(controller: "googleOAuth2", action: "authorize")
 							return false
 						}
+						if(storeCredentialInSession)
+							session.googleCredential = googleCredential
 					}
 				}
 			}
